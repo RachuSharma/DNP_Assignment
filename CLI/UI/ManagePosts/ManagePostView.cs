@@ -5,10 +5,12 @@ namespace CLI.UI.ManagePosts;
 public class ManagePostView
 {
     private readonly IPostRepository _postRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ManagePostView(IPostRepository postRepository)
+    public ManagePostView(IPostRepository postRepository, IUserRepository userRepository)
     {
         this._postRepository = postRepository;
+        this._userRepository = userRepository;
     }
     public async Task showAsync()
     {
@@ -30,7 +32,7 @@ public class ManagePostView
             switch (inputFromUser)
             {
                 case "5":
-                    CreatePostView createPostView = new CreatePostView(_postRepository);
+                    CreatePostView createPostView = new CreatePostView(_postRepository,_userRepository);
                     await createPostView.showAsync();
                     return;
                 case "6":

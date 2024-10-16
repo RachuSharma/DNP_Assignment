@@ -9,9 +9,10 @@ public class CreatePostView
     private readonly IUserRepository _userRepository;
    
 
-    public CreatePostView(IPostRepository postRepository)
+    public CreatePostView(IPostRepository postRepository, IUserRepository userRepository)
     {
         this._postRepository = postRepository;
+        _userRepository = userRepository;
     }
 
     public async Task showAsync()
@@ -46,7 +47,8 @@ public class CreatePostView
                     Console.WriteLine("Post cannot be empty. ");
                     return;
                 }
-
+              
+                Console.WriteLine("Now enter the userId of a user : " + _userRepository.GetManyUser().ToString());
                 int userId = InsertUserId();
                 
                 Console.WriteLine("You are creating a Post with following Information");
@@ -79,7 +81,7 @@ public class CreatePostView
                 var existUser = isUserExiest(userId);
                 if (existUser.Result) ;
                 {
-                    
+                    return userId;
                 }
             }
         }

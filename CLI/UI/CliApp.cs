@@ -44,7 +44,7 @@ public class CliApp
                     await manageUserView.showAsync();
                     break;
                 case "2":
-                    ManagePostView managePostView = new ManagePostView(postRepository);
+                    ManagePostView managePostView = new ManagePostView(postRepository,userRepository);
                     await managePostView.showAsync();
                     break;
             }
