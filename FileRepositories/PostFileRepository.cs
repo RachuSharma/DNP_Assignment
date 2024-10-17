@@ -8,6 +8,13 @@ public class PostFileRepository : IPostRepository
 {
     private const string FilePath = "post.json";
 
+    public PostFileRepository()
+    {
+        if (!File.Exists(FilePath))
+        {
+            File.WriteAllText(FilePath, "[]");
+        }
+    }
     public async Task<Post> AddPostAsync(Post post)
     {
         List<Post> posts = await LoadPostsAsync();

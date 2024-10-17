@@ -6,13 +6,13 @@ namespace FileRepositories;
 
 public class UserFileRepository : IUserRepository
 {
-    private const string Filepath = "user.json";
+    private const string FilePath = "user.json";
 
     public UserFileRepository()
     {
-        if (!File.Exists(Filepath))
+        if (!File.Exists(FilePath))
         {
-          File.WriteAllText(Filepath, "[]");
+          File.WriteAllText(FilePath, "[]");
         }
     }
     public async Task<User> AddUserAsync(User user)
@@ -73,7 +73,7 @@ public class UserFileRepository : IUserRepository
     }
 
     private static Task JsonToFileAsync(string json)
-        => File.WriteAllTextAsync(Filepath, json);
+        => File.WriteAllTextAsync(FilePath, json);
 
     private static string ListToJson(List<User> list)
         => JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true });
@@ -88,5 +88,5 @@ public class UserFileRepository : IUserRepository
         => JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
 
     private static Task<string> ReadJsonAsync()
-        => File.ReadAllTextAsync(Filepath);
+        => File.ReadAllTextAsync(FilePath);
 }

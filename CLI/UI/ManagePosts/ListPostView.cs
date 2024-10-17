@@ -1,4 +1,5 @@
-﻿using RepositoryContracts;
+﻿using Entities;
+using RepositoryContracts;
 
 namespace CLI.UI.ManagePosts;
 
@@ -18,6 +19,17 @@ public class ListPostView
 
     private async Task ListPostAsync()
     {
-        throw new NotImplementedException();
+        IEnumerable<Post> listPostAsync = _postRepository.GetManyPost();
+        List<Post> posts = listPostAsync.OrderBy(u => u.Id).ToList();
+        
+        Console.WriteLine("List of Posts :");
+        Console.WriteLine("[");
+
+        foreach (Post post in posts)
+        {
+            Console.WriteLine($"Post Id : {post.Id} - Title : {post.Title}  \n PostBody : {post.PostsBody} ");
+        }
+        Console.WriteLine("]");
+        Console.WriteLine();
     }
 }
