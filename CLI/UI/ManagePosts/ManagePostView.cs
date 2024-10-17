@@ -33,7 +33,7 @@ public class ManagePostView
             {
                 case "5":
                     CreatePostView createPostView = new CreatePostView(_postRepository,_userRepository);
-                    await createPostView.showAsync();
+                    await createPostView.ShowAsync();
                     return;
                 case "6":
                     ListPostView listPostView = new ListPostView(_postRepository);
