@@ -65,7 +65,18 @@ public class UserFileRepository : IUserRepository
 
     public IQueryable<User> GetManyUser()
        => LoadUsers().Result.AsQueryable();
-    
+
+    public async Task<User> GetSingleUserByUserNameAsync(string userName)
+    {
+        List<User> users = await LoadUsers();
+        var user = users.SingleOrDefault(u => u.UserName == userName);
+        if (user is null)
+        {
+            throw new NotFoundException("User not found");
+        }
+        return user;
+    }
+
     private static Task SaveList(List<User> users)
     {
         string usersAsJson = ListToJson(users);
