@@ -44,8 +44,8 @@ public class UsersController : ControllerBase
     private async Task verifyUserNameIsAvailableAsync(object userName)
     {
         /*
-         * check cheracture length
-         else throwexception
+         * check character length
+         else throw exception
          * check if user is already exiest
          */
 
@@ -128,7 +128,7 @@ public class UsersController : ControllerBase
         try
         {
             await userRepo.DeleteUserAsync(user);
-            return Ok("User Id Deleted");
+            return Ok($"User Id {user} Deleted");
             
         }
         catch (Exception e)
