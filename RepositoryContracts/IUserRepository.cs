@@ -10,4 +10,5 @@ public interface IUserRepository
     Task<User> GetSingleAsync(int id);
     IQueryable<User> GetManyUser();
 
+    Task<User> GetSingleUserByUserNameAsync(string userName);
 }
