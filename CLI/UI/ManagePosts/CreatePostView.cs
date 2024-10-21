@@ -9,89 +9,87 @@ public class CreatePostView
     private readonly IUserRepository _userRepository;
    
 
-    public CreatePostView(IPostRepository postRepository)
+    public CreatePostView(IPostRepository postRepository, IUserRepository userRepository)
     {
         this._postRepository = postRepository;
+        _userRepository = userRepository;
     }
 
-    public async Task showAsync()
+    public async Task ShowAsync()
     {
         Console.WriteLine();
         await CreatePostAsync();
     }
     
-    //TODO 
-
     private async Task CreatePostAsync()
     {
         Console.WriteLine("You are Creating Post");
-        Console.WriteLine("Create TITLE : ");
-        String? title = null;
+        Console.WriteLine("Create TITLE: ");
+        string? title = null;
         while (string.IsNullOrEmpty(title))
         {
             title = Console.ReadLine();
             if (string.IsNullOrEmpty(title))
             {
-                Console.WriteLine("Title cannot be empty. ");
+                Console.WriteLine("Title cannot be empty.");
                 return;
             }
+        }
 
-            Console.WriteLine("Create Post body");
-            String? postsBody = null;
-            while (string.IsNullOrEmpty(postsBody))
+        Console.WriteLine("Create Post body: ");
+        string? postsBody = null;
+        while (string.IsNullOrEmpty(postsBody))
+        {
+            postsBody = Console.ReadLine();
+            if (string.IsNullOrEmpty(postsBody))
             {
-                postsBody = Console.ReadLine();
-                if (string.IsNullOrEmpty(postsBody))
-                {
-                    Console.WriteLine("Post cannot be empty. ");
-                    return;
-                }
-
-                int userId = InsertUserId();
-                
-                Console.WriteLine("You are creating a Post with following Information");
-                Console.WriteLine($"Title : {title}");
-                Console.WriteLine($"PostBody: {postsBody}");
-
-                await AddPostAsync(userId, title, postsBody);
+                Console.WriteLine("Post cannot be empty.");
+                return;
             }
         }
-    }
-
-    private int InsertUserId()
-    {
+      
+        Console.WriteLine("Please insert User ID: ");
         int userId;
-        // take input from user 
-        //make int
-        // check if there is a user with that id in database else call insert id again 
-        Console.WriteLine("Please insert ID :  ");
         while (true)
         {
             string? input = Console.ReadLine();
             if (string.IsNullOrEmpty(input))
             {
-                Console.WriteLine("ID cannot be empty ");
-                return InsertUserId();
+                Console.WriteLine("ID cannot be empty.");
+                continue;
             }
-
             if (int.TryParse(input, out userId))
             {
-                var existUser = isUserExiest(userId);
-                if (existUser.Result) ;
+                bool userExists = await isUserExists(userId);
+                if (userExists)
                 {
-                    
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("User not found. Please enter a valid User ID.");
                 }
             }
+            else
+            {
+                Console.WriteLine("Could not parse the ID, please try again.");
+            }
         }
+
+        Console.WriteLine("You are creating a Post with the following information:");
+        Console.WriteLine($"Title: {title}");
+        Console.WriteLine($"Post Body: {postsBody}");
+
+        await AddPostAsync(userId, title, postsBody);
     }
 
-    private async Task<bool> isUserExiest(int userId)
+    private async Task<bool> isUserExists(int userId)
     {
         var user = await _userRepository.GetSingleAsync(userId);
         return user != null;
     }
 
-    private async Task AddPostAsync( int userId, string title, string postsBody)
+    private async Task AddPostAsync(int userId, string title, string postsBody)
     {
         Post post = new(userId, title, postsBody);
         Post added = await _postRepository.AddPostAsync(post);

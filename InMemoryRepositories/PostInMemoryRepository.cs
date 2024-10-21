@@ -3,9 +3,9 @@ using RepositoryContracts;
 
 namespace InMemoryRepositories;
 
-public class PostInMemoryRepository :IPostRepository
+public class PostInMemoryRepository
 {
-    private readonly List<Post> posts = new();
+  /*  private readonly List<Post> posts = new();
 
     public PostInMemoryRepository()
     {
@@ -64,4 +64,5 @@ public class PostInMemoryRepository :IPostRepository
     {
         return posts.AsQueryable();
     }
+    */
 }

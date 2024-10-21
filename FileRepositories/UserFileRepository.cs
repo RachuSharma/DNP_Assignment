@@ -6,35 +6,27 @@ namespace FileRepositories;
 
 public class UserFileRepository : IUserRepository
 {
-    private readonly string filepath = "user.json";
+    private const string FilePath = "user.json";
 
     public UserFileRepository()
     {
-        if (!File.Exists(filepath))
+        if (!File.Exists(FilePath))
         {
-          File.WriteAllText(filepath, "[]");
+          File.WriteAllText(FilePath, "[]");
         }
     }
     public async Task<User> AddUserAsync(User user)
     {
-        string usersAsJson = await File.ReadAllTextAsync(filepath);
-        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
-        
-        int maxId = users.Count > 0 ? users.Max(u => u.Id) : 1;
-        user.Id = maxId + 1;
+        List<User> users = await LoadUsers();
+       user.Id = users.Count > 0 ? users.Max(u => u.Id) +1 : 1;
         users.Add(user);
-        
-        
-        usersAsJson = JsonSerializer.Serialize(users);
-        await File.WriteAllTextAsync(filepath, usersAsJson);
+        await SaveList(users);
         return user;
     }
 
-    public async Task<User> UpdateUserAsync(User user)
+    public async Task UpdateUserAsync(User user)
     {
-        string usersAsJson = await File.ReadAllTextAsync(filepath);
-        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
-        
+        List<User> users = await LoadUsers();
         User? existingUser = users.SingleOrDefault(u => u.Id == user.Id);
         if (existingUser is null)
         {
@@ -44,31 +36,25 @@ public class UserFileRepository : IUserRepository
         users.Remove(existingUser);
         users.Add(user);
 
-        usersAsJson = JsonSerializer.Serialize(users);
-        await File.WriteAllTextAsync(filepath, usersAsJson);
-        return user;    }
+        await SaveList(users);
+    }
 
     public async Task DeleteUserAsync(int id)
     {
-        string usersAsJson = await File.ReadAllTextAsync(filepath);
-        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
-
+        List<User> users = await LoadUsers();
         var userToRemove = users.SingleOrDefault(u => u.Id == id);
         if (userToRemove is null)
         {
-            throw new("User not found");
+            throw new NotFoundException($"User not found with id: {id}");
         }
 
-        users.Remove(userToRemove); 
-        usersAsJson = JsonSerializer.Serialize(users);
-        await File.WriteAllTextAsync(filepath, usersAsJson);
+        users.Remove(userToRemove);
+        await SaveList(users);
     }
 
     public async Task<User> GetSingleAsync(int id)
     {
-        string usersAsJson = await File.ReadAllTextAsync(filepath);
-        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
-
+        List<User> users = await LoadUsers();
         var user = users.SingleOrDefault(u => u.Id == id);
         if (user is null)
         {
@@ -78,9 +64,29 @@ public class UserFileRepository : IUserRepository
     }
 
     public IQueryable<User> GetManyUser()
+       => LoadUsers().Result.AsQueryable();
+    
+    private static Task SaveList(List<User> users)
     {
-        string userAsJson = File.ReadAllTextAsync(filepath).Result;
-        List<User> users = JsonSerializer.Deserialize<List<User>>(userAsJson)!;
-        return users.AsQueryable();
+        string usersAsJson = ListToJson(users);
+        return JsonToFileAsync(usersAsJson);
     }
+
+    private static Task JsonToFileAsync(string json)
+        => File.WriteAllTextAsync(FilePath, json);
+
+    private static string ListToJson(List<User> list)
+        => JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true });
+
+    private static async Task<List<User>> LoadUsers()
+    {
+        string usersAsJson = await ReadJsonAsync();
+        return JsonToUserList(usersAsJson);
+    }
+
+    private static List<User> JsonToUserList(string usersAsJson)
+        => JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
+
+    private static Task<string> ReadJsonAsync()
+        => File.ReadAllTextAsync(FilePath);
 }
