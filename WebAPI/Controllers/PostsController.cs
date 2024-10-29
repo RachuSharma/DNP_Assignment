@@ -82,8 +82,8 @@ public class PostsController : ControllerBase
     {
         return Ok( postRepo.GetManyPost());
     }
-    [HttpPatch]
-    public async Task<ActionResult<CreatePostDto>> UpdatePost([FromBody] Post post)
+    //[HttpPatch]
+    /*public async Task<ActionResult<CreatePostDto>> UpdatePost([FromBody] Post post)
     {
         try
         {
@@ -95,7 +95,47 @@ public class PostsController : ControllerBase
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
         }
+    }*/
+    
+    [HttpPatch("{id}" )]
+    public async Task<ActionResult<CreatePostDto>> UpdatePost([FromRoute] int id, [FromBody] CreatePostDto request)
+    {
+        try
+        {
+            // Log the id for debugging
+            Console.WriteLine($"Received Post ID: {id}");
+
+            // Validate id
+            if (id <= 0)
+            {
+                return BadRequest("Invalid Post ID. Post ID must be greater than 0.");
+            }
+
+            // Check if the post exists
+            var existingPost = await postRepo.GetSinglePostAsync(id);
+            if (existingPost == null)
+            {
+                return NotFound($"Post with ID '{id}' not found.");
+            }
+
+            // Prevent changing UserId - we only allow updates to Title and PostsBody
+            existingPost.Title = request.Title;
+            existingPost.PostsBody = request.PostsBody;
+
+            // Update the post
+            await postRepo.UpdatePostAsync(existingPost);
+
+            return Ok("Your post has been updated. User ID cannot be change");
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
     }
+
+
     [HttpDelete]
     public async Task<ActionResult> DeletePost([FromBody] int post)
     {
