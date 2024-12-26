@@ -3,9 +3,9 @@ using RepositoryContracts;
 
 namespace InMemoryRepositories;
 
-public class UserInMemoryRepository 
+public class UserInMemoryRepository : IUserRepository
 {
-   /* private readonly List<User> users = new();
+    private readonly List<User> users = new();
 
     public UserInMemoryRepository()
     {
@@ -21,7 +21,7 @@ public class UserInMemoryRepository
         return Task.FromResult(user);
     }
 
-    public Task<User> UpdateUserAsync(User user)
+    public Task UpdateUserAsync(User user)
     {
         User? existingUser = users.SingleOrDefault(u => u.Id == user.Id);
         if (existingUser is null)
@@ -62,5 +62,5 @@ public class UserInMemoryRepository
     public IQueryable<User> GetManyUser()
     {
         return users.AsQueryable();
-    }*/
+    }
 }

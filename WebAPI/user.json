@@ -1,0 +1,47 @@
+[
+  {
+    "UserName": "Rachu",
+    "Password": "aaaaa",
+    "Id": 1
+  },
+  {
+    "UserName": "Ramesh",
+    "Password": "aaaaa",
+    "Id": 2
+  },
+  {
+    "UserName": "Himal",
+    "Password": "aaaaa",
+    "Id": 3
+  },
+  {
+    "UserName": "DiluS",
+    "Password": "aaaaa",
+    "Id": 4
+  },
+  {
+    "UserName": "Homnath",
+    "Password": "aaaaa",
+    "Id": 5
+  },
+  {
+    "UserName": "Prabina",
+    "Password": "string",
+    "Id": 6
+  },
+  {
+    "UserName": "Bhatta",
+    "Password": "aaaaa",
+    "Id": 7
+  },
+  {
+    "UserName": "Sharma",
+    "Password": "aaaaa",
+    "Id": 8
+  },
+  {
+    "UserName": "Radhika",
+    "Password": "aaaaa",
+    "Id": 9
+  }
+]

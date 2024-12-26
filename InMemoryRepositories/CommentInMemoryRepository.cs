@@ -3,13 +3,13 @@ using RepositoryContracts;
 
 namespace InMemoryRepositories;
 
-public class CommentInMemoryRepository
+public class CommentInMemoryRepository : ICommentRepository
 {
-  /*  private readonly List<Comment> comments = new();
+  private readonly List<Comment> comments = new();
 
     public CommentInMemoryRepository()
     {
-        _ = AddCommentAsync(new Comment(1, 1, "Best of luck for")).Result;
+        _ = AddCommentAsync(new Comment(1, 1, "Best of luck for"));
     }
 
     public Task AddCommentAsync(Comment comment)
@@ -58,5 +58,5 @@ public class CommentInMemoryRepository
     public IQueryable<Comment> GetAllComment()
     {
         return comments.AsQueryable();
-    }*/
+    }
 }
